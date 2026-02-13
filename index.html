@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camila & Ruben ♾️</title>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle at top, #1a1a2e, #0f0f1a);
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+        }
+
+        /* Pantalla contraseña */
+        #bloqueo {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #0f0f1a;
+            z-index: 10;
+        }
+
+        input {
+            padding: 10px;
+            border-radius: 20px;
+            border: none;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: #ff4d6d;
+            color: white;
+            margin-top: 10px;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #mensaje {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 85%;
+            text-align: center;
+            line-height: 1.6;
+            font-size: 19px;
+            opacity: 0;
+        }
+
+        .brilloNombre {
+            color: #ff4d6d;
+            text-shadow: 0 0 10px #ff4d6d, 0 0 25px #ff4d6d;
+            animation: latido 1.5s infinite;
+        }
+
+        @keyframes latido {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .corazon {
+            position: absolute;
+            color: #ff4d6d;
+            animation: flotar 6s linear infinite;
+        }
+
+        @keyframes flotar {
+            0% {
+                transform: translateY(100vh);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-10vh);
+                opacity: 0;
+            }
+        }
+
+        #galeria img {
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 0 20px #ff4d6d;
+            opacity: 0.85;
+        }
+
+        #infinito {
+            display: none;
+            font-size: 90px;
+            position: absolute;
+            bottom: 18%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: brillar 2s infinite alternate;
+        }
+
+        @keyframes brillar {
+            from {
+                opacity: 0.5;
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+
+        #botonFinal {
+            display: none;
+            position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* 📱 Responsivo para móviles */
+        @media (max-width: 768px) {
+            #mensaje {
+                font-size: 14px;
+                max-width: 90%;
+            }
+
+            input {
+                width: 70%;
+                padding: 12px 15px;
+            }
+
+            button {
+                padding: 10px 30px;
+                font-size: 14px;
+            }
+
+            #galeria img {
+                width: 70px;
+                height: 70px;
+            }
+
+            #infinito {
+                font-size: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #mensaje {
+                font-size: 12px;
+                line-height: 1.4;
+            }
+
+            #galeria img {
+                width: 60px;
+                height: 60px;
+            }
+
+            #infinito {
+                font-size: 50px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="bloqueo">
+        <h2>Ingresa nuestra fecha especial 💖</h2>
+        <input type="password" id="clave" placeholder="DDMMYYYY">
+        <button onclick="verificar()">Entrar</button>
+    </div>
+
+    <canvas id="estrellas"></canvas>
+    <div id="galeria">
+        <img src="foto1.jpg">
+        <img src="foto2.jpg">
+        <img src="foto3.jpg">
+        <img src="foto4.jpg">
+        <img src="foto5.jpg">
+        <img src="foto6.jpg">
+        <img src="foto7.jpg">
+        <img src="foto8.jpg">
+        <img src="foto9.jpg">
+        <img src="foto10.jpg">
+        <img src="foto11.jpg">
+        <img src="foto12.jpg">
+        <img src="foto13.jpg">
+        <img src="foto14.jpg">
+        <img src="foto15.jpg">
+        <img src="foto16.jpg">
+        <img src="foto17.jpg">
+        <img src="foto18.jpg">
+        <img src="foto19.jpg">
+        <img src="foto20.jpg">
+
+    </div>
+
+    <div id="mensaje"></div>
+    <div id="infinito">♾️</div>
+    <button id="botonFinal">Para Siempre Camila ❤️</button>
+
+    <audio id="musica" loop preload="auto">
+        <source src="cancion.mp3" type="audio/mp3">
+    </audio>
+    <!-- Archivos requeridos: foto1.jpg, foto2.jpg, foto3.jpg, foto4.jpg, foto5.jpg, cancion.mp3 -->
+
+    <script>
+
+        // 🔐 contraseña = 22032025
+        function verificar() {
+            if (document.getElementById("clave").value === "22032025") {
+                document.getElementById("bloqueo").style.display = "none";
+                const audio = document.getElementById("musica");
+                audio.play().catch(e => console.log("No se pudo reproducir audio: " + e));
+                iniciar();
+            } else {
+                alert("Esa no es nuestra fecha ❤️");
+            }
+        }
+
+        // 🌌 estrellas
+        const canvas = document.getElementById("estrellas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let estrellas = [];
+        for (let i = 0; i < 150; i++) {
+            estrellas.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, r: Math.random() * 2, d: Math.random() * 0.5 });
+        }
+
+        function animar() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "white";
+            estrellas.forEach(e => {
+                ctx.beginPath();
+                ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+                ctx.fill();
+                e.y += e.d;
+                if (e.y > canvas.height) e.y = 0;
+            });
+            requestAnimationFrame(animar);
+        }
+
+        // ❤️ corazones
+        function crearCorazon() {
+            const c = document.createElement("div");
+            c.className = "corazon";
+            c.innerHTML = "❤️";
+            c.style.left = Math.random() * 100 + "vw";
+            c.style.fontSize = (Math.random() * 20 + 15) + "px";
+            document.body.appendChild(c);
+            setTimeout(() => c.remove(), 6000);
+        }
+
+        // 🎆 fuegos artificiales
+        function fuegos() {
+            for (let i = 0; i < 80; i++) {
+                let f = document.createElement("div");
+                f.innerHTML = "✨";
+                f.style.position = "absolute";
+                f.style.left = window.innerWidth / 2 + "px";
+                f.style.top = window.innerHeight / 2 + "px";
+                f.style.fontSize = "20px";
+                f.style.transition = "all 2s ease-out";
+                document.body.appendChild(f);
+                setTimeout(() => {
+                    f.style.left = Math.random() * window.innerWidth + "px";
+                    f.style.top = Math.random() * window.innerHeight + "px";
+                    f.style.opacity = 0;
+                }, 10);
+                setTimeout(() => f.remove(), 2000);
+            }
+        }
+
+        // 📸 fotos corazón
+        function acomodarFotos() {
+            const fotos = document.querySelectorAll("#galeria img");
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+            const tamaño = 200;
+            fotos.forEach((foto, i) => {
+                let t = i * (Math.PI * 2 / fotos.length);
+                let x = 16 * Math.pow(Math.sin(t), 3);
+                let y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+                foto.style.left = cx + x * tamaño / 16 - 55 + "px";
+                foto.style.top = cy + y * tamaño / 16 - 55 + "px";
+            });
+        }
+
+        // 📅 fechas
+        let matrimonio = new Date("2025-03-22");
+        let conocieron = new Date("2024-04-01");
+        let hoy = new Date();
+        let diasCasados = Math.abs(Math.floor((hoy - matrimonio) / (1000 * 60 * 60 * 24)));
+        let diasConocidos = Math.abs(Math.floor((hoy - conocieron) / (1000 * 60 * 60 * 24)));
+
+        // 💌 carta
+        const texto = `Camila...
+
+Desde abril del 2024 supe que algo en mi vida iba a cambiar para siempre.
+
+Aún recuerdo la plaza del 36...
+Tú, atrevida como siempre,
+robándome un beso apenas me viste.
+
+Y en ese beso descubrí algo más grande que yo.
+
+Descubrí tu fuerza.
+Tu valentía.
+Tu dulzura escondida detrás de esa niña decidida
+que nunca se deja ganar.
+
+Descubrí que serías la mujer de mi vida.
+Desde antes de ese beso…
+yo ya te amaba.
+
+El 22 de marzo de 2025
+sellamos lo que mi corazón ya sabía:
+que tú eras mi eternidad.
+Hoy llevamos ${diasCasados} días casados,
+y cada día confirmo que eres mi hogar.
+
+Con un pasado que pudo haberte cerrado el corazón…
+decidiste abrirlo para mí.
+Decidiste amarme.
+Cuidarme.
+Respetarme.
+
+Incluso cuando fallé…
+me perdonaste.
+Y me amaste aún más fuerte.
+
+Camila…
+gracias por elegirme.
+Gracias por quedarte.
+Gracias por ser mi esposa,
+mi hogar,
+mi paz,
+mi amor eterno.
+
+Te ama,
+Ruben ❤️`;
+
+        let i = 0;
+        const mensaje = document.getElementById("mensaje");
+
+        function escribir() {
+            if (i < texto.length) {
+                mensaje.style.opacity = 1;
+                if (texto.substring(i, i + 7) === "Camila") {
+                    mensaje.innerHTML += '<span class="brilloNombre">Camila</span>';
+                    i += 7;
+                } else {
+                    mensaje.innerHTML += texto.charAt(i) === "\n" ? "<br>" : texto.charAt(i);
+                    i++;
+                }
+                setTimeout(escribir, 40);
+            } else {
+                document.getElementById("infinito").style.display = "block";
+                document.getElementById("botonFinal").style.display = "block";
+                lluviaFinal();
+                fuegos();
+            }
+        }
+
+        function lluviaFinal() {
+            for (let i = 0; i < 150; i++) {
+                setTimeout(crearCorazon, i * 40);
+            }
+        }
+
+        let toques = 0;
+        document.body.addEventListener("click", () => {
+            toques++;
+            if (toques === 3) {
+                alert("Mensaje secreto: Eres el milagro más hermoso que me dio la vida ❤️");
+            }
+        });
+
+        function iniciar() {
+            animar();
+            acomodarFotos();
+            setInterval(crearCorazon, 500);
+            setTimeout(escribir, 2000);
+        }
+
+        document.getElementById("botonFinal").onclick = function () {
+            alert("Tú y yo… hasta la eternidad ♾️❤️");
+        };
+    </script>
+
+</body>
+
+</html>
