@@ -5,13 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camila & Ruben ♾️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
 
     <style>
         body {
             margin: 0;
             overflow: hidden;
             background: radial-gradient(circle at top, #1a1a2e, #0f0f1a);
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Playfair Display', 'Segoe UI', serif;
             color: white;
         }
 
@@ -53,14 +55,17 @@
 
         #mensaje {
             position: absolute;
-            top: 50%;
+            top: 15%;
             left: 50%;
             transform: translate(-50%, -50%);
             max-width: 85%;
             text-align: center;
-            line-height: 1.6;
+            line-height: 1.8;
             font-size: 19px;
             opacity: 0;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.5px;
+            font-weight: 700;
         }
 
         .brilloNombre {
@@ -118,7 +123,8 @@
             bottom: 18%;
             left: 50%;
             transform: translateX(-50%);
-            animation: brillar 2s infinite alternate;
+            animation: brillar 2s infinite alternate, aparecer 1.5s ease-in;
+            opacity: 0;
         }
 
         @keyframes brillar {
@@ -130,6 +136,34 @@
                 opacity: 1;
                 transform: translateX(-50%) scale(1.1);
             }
+        }
+
+        @keyframes aparecer {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes desvanecerse {
+            from {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+
+            to {
+                opacity: 0;
+                transform: translate(-50%, -300%);
+            }
+        }
+
+        .desvaneciendo {
+            animation: desvanecerse 2.5s ease-out forwards !important;
         }
 
         /* 🌠 Estrellas fugaces */
@@ -196,6 +230,45 @@
             transform: translateX(-50%);
         }
 
+        /* ✨ Estrellas en pantalla de bloqueo */
+        .estrella-bloqueo {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.6;
+            animation: parpadear 2s infinite;
+        }
+
+        .perrito-bloqueo {
+            position: absolute;
+            font-size: 28px;
+            opacity: 0.7;
+            animation: flotar-animal 4s ease-in-out infinite;
+        }
+
+        @keyframes parpadear {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes flotar-animal {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
         /* 📱 Responsivo para móviles */
         @media (max-width: 768px) {
             #mensaje {
@@ -244,6 +317,7 @@
 <body>
 
     <div id="bloqueo">
+        <div id="decoracionBloqueo"></div>
         <h2>Ingresa nuestra fecha especial 💖</h2>
         <input type="password" id="clave" placeholder="DDMMYYYY">
         <button onclick="verificar()">Entrar</button>
@@ -287,7 +361,40 @@
 
     <script>
 
-        // 🌠 Estrellas fugaces
+        // ✨ Crear estrellas en pantalla de bloqueo
+        function crearEstrellasBloqueo() {
+            const bloqueo = document.getElementById("bloqueo");
+            for (let i = 0; i < 12; i++) {
+                const estrella = document.createElement("div");
+                estrella.className = "estrella-bloqueo";
+                estrella.innerHTML = "⭐";
+                estrella.style.left = Math.random() * 90 + "%";
+                estrella.style.top = Math.random() * 80 + "%";
+                estrella.style.animationDelay = (Math.random() * 2) + "s";
+                bloqueo.appendChild(estrella);
+            }
+        }
+
+        // 🐕 Crear perritos en pantalla de bloqueo
+        function crearPerritosBloqueo() {
+            const bloqueo = document.getElementById("bloqueo");
+            const emojisPerros = ["🐕", "🐶", "🐩"];
+            for (let i = 0; i < 8; i++) {
+                const perro = document.createElement("div");
+                perro.className = "perrito-bloqueo";
+                perro.innerHTML = emojisPerros[Math.floor(Math.random() * emojisPerros.length)];
+                perro.style.left = Math.random() * 85 + "%";
+                perro.style.top = Math.random() * 70 + "%";
+                perro.style.animationDelay = (Math.random() * 4) + "s";
+                bloqueo.appendChild(perro);
+            }
+        }
+
+        // Crear decoración al cargar
+        window.addEventListener("load", () => {
+            crearEstrellasBloqueo();
+            crearPerritosBloqueo();
+        });
         function crearEstrellasugaz() {
             const fugaz = document.createElement("div");
             fugaz.className = "estrella-fugaz";
@@ -524,22 +631,48 @@ Ruben ❤️`;
         let i = 0;
         const mensaje = document.getElementById("mensaje");
 
+        let liniaActual = "";
+
         function escribir() {
             if (i < texto.length) {
                 mensaje.style.opacity = 1;
-                if (texto.substring(i, i + 7) === "Camila") {
-                    mensaje.innerHTML += '<span class="brilloNombre">Camila</span>';
-                    i += 7;
-                } else {
-                    mensaje.innerHTML += texto.charAt(i) === "\n" ? "<br>" : texto.charAt(i);
+                if (texto.charAt(i) === "\n") {
+                    // Cuando encuentre salto de línea, esperar y limpiar para la siguiente línea
+                    liniaActual = "";
                     i++;
+                    setTimeout(() => {
+                        mensaje.innerHTML = "";
+                        escribir();
+                    }, 800);
+                } else if (texto.substring(i, i + 7) === "Camila") {
+                    liniaActual += '<span class="brilloNombre">Camila</span>';
+                    mensaje.innerHTML = liniaActual;
+                    i += 7;
+                    setTimeout(escribir, 40);
+                } else {
+                    liniaActual += texto.charAt(i);
+                    mensaje.innerHTML = liniaActual;
+                    i++;
+                    setTimeout(escribir, 40);
                 }
-                setTimeout(escribir, 40);
             } else {
-                document.getElementById("infinito").style.display = "block";
-                document.getElementById("botonFinal").style.display = "block";
-                lluviaFinal();
-                fuegos();
+                // Efecto cascada: desvanecerse suavemente
+                setTimeout(() => {
+                    mensaje.classList.add("desvaneciendo");
+                }, 1000);
+
+                // Mostrar infinito y botón después de desvanecerse
+                setTimeout(() => {
+                    document.getElementById("infinito").style.display = "block";
+                    document.getElementById("botonFinal").style.display = "block";
+                    mensaje.innerHTML = ""; // Limpiar el mensaje
+                }, 3500);
+
+                // Efectos finales
+                setTimeout(() => {
+                    lluviaFinal();
+                    fuegos();
+                }, 4000);
             }
         }
 
