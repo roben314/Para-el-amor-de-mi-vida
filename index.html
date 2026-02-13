@@ -132,6 +132,62 @@
             }
         }
 
+        /* 🌠 Estrellas fugaces */
+        .estrella-fugaz {
+            position: fixed;
+            width: 2px;
+            height: 100px;
+            background: linear-gradient(to bottom, white, transparent);
+            animation: fugaz 2s ease-in-out;
+        }
+
+        @keyframes fugaz {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) translateX(100px);
+            }
+        }
+
+        /* 💫 Constelaciones corazón */
+        .constelacion {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 6px 1px rgba(255, 77, 109, 0.8);
+            animation: palpitar 1.5s ease-in-out infinite;
+        }
+
+        @keyframes palpitar {
+
+            0%,
+            100% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.3);
+            }
+        }
+
+        /* 🌌 Galaxia */
+        #galaxia {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
         #botonFinal {
             display: none;
             position: absolute;
@@ -194,6 +250,8 @@
     </div>
 
     <canvas id="estrellas"></canvas>
+    <canvas id="galaxia"></canvas>
+    <div id="constelaciones"></div>
     <div id="galeria">
         <img src="foto1.jpg">
         <img src="foto2.jpg">
@@ -229,7 +287,105 @@
 
     <script>
 
-        // 🔐 contraseña = 22032025
+        // 🌠 Estrellas fugaces
+        function crearEstrellasugaz() {
+            const fugaz = document.createElement("div");
+            fugaz.className = "estrella-fugaz";
+            fugaz.style.left = Math.random() * window.innerWidth + "px";
+            fugaz.style.top = Math.random() * window.innerHeight / 2 + "px";
+            fugaz.style.transform = "rotate(" + (Math.random() * 180) + "deg)";
+            document.body.appendChild(fugaz);
+            setTimeout(() => fugaz.remove(), 2000);
+        }
+
+        // 💫 Constelaciones en forma de corazón
+        function crearConstelaciones() {
+            const constelacionesDiv = document.getElementById("constelaciones");
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+            const tamaño = 250;
+
+            // Crear puntos en forma de corazón
+            for (let t = 0; t < Math.PI * 2; t += 0.1) {
+                const x = 16 * Math.pow(Math.sin(t), 3);
+                const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+
+                const punto = document.createElement("div");
+                punto.className = "constelacion";
+                punto.style.left = (cx + x * tamaño / 16) + "px";
+                punto.style.top = (cy + y * tamaño / 16) + "px";
+                punto.style.animationDelay = (Math.random() * 1.5) + "s";
+                constelacionesDiv.appendChild(punto);
+            }
+        }
+
+        // 🌌 Efecto galaxia
+        function crearGalaxia() {
+            const canvas = document.getElementById("galaxia");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const ctx = canvas.getContext("2d");
+            let rotacion = 0;
+
+            function animarGalaxia() {
+                ctx.fillStyle = "rgba(15, 15, 26, 0.1)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.save();
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate(rotacion);
+
+                // Galaxia espiral
+                for (let i = 0; i < 200; i++) {
+                    const angulo = i * 0.1;
+                    const radio = i * 1.5;
+                    const x = Math.cos(angulo) * radio;
+                    const y = Math.sin(angulo) * radio;
+
+                    ctx.fillStyle = `rgba(255, 77, 109, ${0.5 - i / 400})`;
+                    ctx.fillRect(x, y, 1, 1);
+                }
+
+                ctx.restore();
+                rotacion += 0.0005;
+                requestAnimationFrame(animarGalaxia);
+            }
+
+            animarGalaxia();
+        }
+
+        // 💌 Mejorar escritura letra por letra con efecto especial
+        function escribirMejorado(texto, elemento, velocidad = 40) {
+            let i = 0;
+            elemento.innerHTML = "";
+            elemento.style.opacity = 1;
+
+            function escribir() {
+                if (i < texto.length) {
+                    if (texto.substring(i, i + 7) === "Camila") {
+                        elemento.innerHTML += '<span class="brilloNombre">Camila</span>';
+                        i += 7;
+                    } else if (texto.charAt(i) === "\n") {
+                        elemento.innerHTML += "<br>";
+                        i++;
+                    } else {
+                        elemento.innerHTML += texto.charAt(i);
+                        i++;
+                    }
+                    setTimeout(escribir, velocidad);
+                }
+                return i >= texto.length;
+            }
+
+            return new Promise((resolve) => {
+                const interval = setInterval(() => {
+                    if (escribir()) {
+                        clearInterval(interval);
+                        resolve();
+                    }
+                }, 0);
+            });
+        }
         function verificar() {
             if (document.getElementById("clave").value === "22032025") {
                 document.getElementById("bloqueo").style.display = "none";
@@ -403,8 +559,11 @@ Ruben ❤️`;
 
         function iniciar() {
             animar();
+            crearGalaxia();
+            crearConstelaciones();
             acomodarFotos();
             setInterval(crearCorazon, 500);
+            setInterval(crearEstrellasugaz, 800);
             setTimeout(escribir, 2000);
         }
 
