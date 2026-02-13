@@ -61,7 +61,7 @@
             max-width: 85%;
             text-align: center;
             line-height: 1.8;
-            font-size: 19px;
+            font-size: 21px;
             opacity: 0;
             font-family: 'Playfair Display', serif;
             letter-spacing: 0.5px;
@@ -272,7 +272,7 @@
         /* 📱 Responsivo para móviles */
         @media (max-width: 768px) {
             #mensaje {
-                font-size: 14px;
+                font-size: 16px;
                 max-width: 90%;
             }
 
@@ -287,8 +287,8 @@
             }
 
             #galeria img {
-                width: 70px;
-                height: 70px;
+                width: 50px;
+                height: 50px;
             }
 
             #infinito {
@@ -298,13 +298,13 @@
 
         @media (max-width: 480px) {
             #mensaje {
-                font-size: 12px;
+                font-size: 14px;
                 line-height: 1.4;
             }
 
             #galeria img {
-                width: 60px;
-                height: 60px;
+                width: 40px;
+                height: 40px;
             }
 
             #infinito {
@@ -564,7 +564,10 @@
             const fotos = document.querySelectorAll("#galeria img");
             const cx = window.innerWidth / 2;
             const cy = window.innerHeight / 2;
-            const tamaño = 200;
+
+            // Ajustar tamaño del corazón según pantalla
+            let tamaño = window.innerWidth < 768 ? 120 : 200;
+
             fotos.forEach((foto, i) => {
                 let t = i * (Math.PI * 2 / fotos.length);
                 let x = 16 * Math.pow(Math.sin(t), 3);
